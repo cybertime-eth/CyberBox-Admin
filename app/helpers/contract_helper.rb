@@ -127,7 +127,10 @@ module ContractHelper
                     MiniMagick.configure do |config|
                         config.timeout = 10
                     end
+                    logger.info("//////// start loading image ///////")
+                    logger.info(imageUrl)
                     image = MiniMagick::Image.open(imageUrl)
+                    logger.info("//////// complete loading image ///////")
                     image.resize "280x280"
                     image.format "png"
                     image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
