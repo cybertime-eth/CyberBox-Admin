@@ -117,8 +117,7 @@ module ContractHelper
                     image.resize "280x280"
                     image.format "png"
                     image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
-                    errorLogs = ErrorImageItem.find_by(contract_name:contract_info_obj.contract_info_id)
-                    errorLogs.destroy
+                    File.chmod(0777,"#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
                 rescue => e
                     puts "# makeThumbnail error"
                     @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
