@@ -8,6 +8,8 @@ module ContractHelper
         contracts_data.each do |contract_data|
             saveContractModel(contract_data)
         end
+
+        logger.info("---------fetchAllContractDetail completed -------")
     end
 
     def fetchContractDetail(nftAddress)
@@ -25,6 +27,7 @@ module ContractHelper
             end
             start_index = start_index + per_page_count
         end
+        logger.info("---------fetchContractDetail completed -------")
     end
 
     def fetchIPFSImage(contract_name)
@@ -36,6 +39,7 @@ module ContractHelper
             end
             makeThumbnail(contractInfo)
         end
+        logger.info("---------fetchIPFSImage completed -------")
     end
 
     def fetchAllErrorImages
@@ -44,6 +48,7 @@ module ContractHelper
             contract_name = error_item.contract_name
             fetchIPFSImage(contract_name)
         end
+        logger.info("---------fetchAllErrorImages completed -------")
     end
 
 
