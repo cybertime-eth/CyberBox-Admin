@@ -105,7 +105,8 @@ module ContractHelper
         @contractInfo.save!
         makeThumbnail(@contractInfo)
     end
-
+    # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
+    # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
     def makeThumbnail(contract_info_obj)
         imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
         if File.exist?(imagePath) == false
@@ -113,7 +114,9 @@ module ContractHelper
             if contract_info_obj.image.present?
                 begin
                     puts "#{contract_info_obj.image}"
-                    image = MiniMagick::Image.open(contract_info_obj.image)
+                    imageUrl = contract_info_obj.image
+                    imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
+                    image = MiniMagick::Image.open(imageUrl)
                     image.resize "280x280"
                     image.format "png"
                     image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
