@@ -115,7 +115,12 @@ module ContractHelper
                 begin
                     puts "#{contract_info_obj.image}"
                     imageUrl = contract_info_obj.image
-                    imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
+                    if imageUrl.include? "ipfs://"
+                        imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
+                    end
+                    MiniMagick.configure do |config|
+                        config.timeout = 10
+                    end
                     image = MiniMagick::Image.open(imageUrl)
                     image.resize "280x280"
                     image.format "png"
