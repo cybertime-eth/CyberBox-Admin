@@ -80,5 +80,4 @@ gem 'inherited_resources', github: 'activeadmin/inherited_resources' # FIXME: re
 gem 'devise'
 gem 'cancancan'
 gem 'draper'
-# gem 'pundit'
-gem 'puma'
+gem 'pundit'
