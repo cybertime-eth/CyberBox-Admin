@@ -31,6 +31,7 @@ module ContractHelper
     end
 
     def fetchIPFSImage(contract_name)
+        sleep(1)
         logger.info("---------fetchIPFSImage started -------")
         contractInfo = ContractInfo.find_by(contract_info_id:contract_name)
         if contractInfo.present?
