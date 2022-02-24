@@ -114,7 +114,7 @@ module ContractHelper
                 begin
                     puts "#{contract_info_obj.image}"
                     image = MiniMagick::Image.open(contract_info_obj.image)
-                    image.resize "100x100"
+                    image.resize "280x280"
                     image.format "png"
                     image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
                     errorLogs = ErrorImageItem.find_by(contract_name:contract_info_obj.contract_info_id)
