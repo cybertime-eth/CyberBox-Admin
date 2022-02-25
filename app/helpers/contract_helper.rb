@@ -3,7 +3,7 @@ module ContractHelper
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
-        puts "# fetchAllContractDetail"
+        logger.info("---------fetchAllContractDetail started -------")
         contracts_data = fetchTheGraphAllContracts()
         contracts_data.each do |contract_data|
             saveContractModel(contract_data)
@@ -13,7 +13,7 @@ module ContractHelper
     end
 
     def fetchContractDetail(nftAddress)
-        puts "# fetchContractDetail #{nftAddress}}"
+        logger.info("---------fetchContractDetail #{nftAddress} -------")
         contract_data = fetchTheGraphContract(nftAddress)
         saveContractModel(contract_data)
         all_mint_count =  contract_data.mint_count
@@ -60,30 +60,30 @@ module ContractHelper
             @contract = Contract.new
         end
         @contract.contract_id = contractData.id
-        @contract.title = contractData.title
-        @contract.nftName = contractData.nft_name
-        @contract.nftSymbol = contractData.nft_symbol
-        @contract.nftAddress = contract_address
-        @contract.erc20Name = contractData.erc20_name
-        @contract.erc20Symbol = contractData.erc20_symbol
-        @contract.erc20Address = contractData.erc20_address
-        @contract.marketPlaceAddress = contractData.market_place_address
-        @contract.marketFee = contractData.market_fee
-        @contract.marketPlaceFeeAddress = contractData.market_place_fee_address
-        @contract.createrFee = contractData.creater_fee
-        @contract.tokenCreaterAddress = contractData.token_creater_address
-        @contract.producerFee = contractData.producer_fee
-        @contract.tokenProducerAddress = contractData.token_producer_address
-        @contract.ownerCount = contractData.owner_count
-        @contract.mint_count = contractData.mint_count
-        @contract.bid_count = contractData.bid_count
-        @contract.list_count = contractData.list_count
-        @contract.sell_count = contractData.sell_count
-        @contract.sell_max_price = contractData.sell_max_price
-        @contract.sell_min_price = contractData.sell_min_price
-        @contract.sell_total_price = contractData.sell_total_price
-        @contract.traitTypesCount = contractData.trait_types_count
-        @contract.save!
+            @contract.title = contractData.title
+            @contract.nftName = contractData.nft_name
+            @contract.nftSymbol = contractData.nft_symbol
+            @contract.nftAddress = contract_address
+            @contract.erc20Name = contractData.erc20_name
+            @contract.erc20Symbol = contractData.erc20_symbol
+            @contract.erc20Address = contractData.erc20_address
+            @contract.marketPlaceAddress = contractData.market_place_address
+            @contract.marketFee = contractData.market_fee
+            @contract.marketPlaceFeeAddress = contractData.market_place_fee_address
+            @contract.createrFee = contractData.creater_fee
+            @contract.tokenCreaterAddress = contractData.token_creater_address
+            @contract.producerFee = contractData.producer_fee
+            @contract.tokenProducerAddress = contractData.token_producer_address
+            @contract.ownerCount = contractData.owner_count
+            @contract.mint_count = contractData.mint_count
+            @contract.bid_count = contractData.bid_count
+            @contract.list_count = contractData.list_count
+            @contract.sell_count = contractData.sell_count
+            @contract.sell_max_price = contractData.sell_max_price
+            @contract.sell_min_price = contractData.sell_min_price
+            @contract.sell_total_price = contractData.sell_total_price
+            @contract.traitTypesCount = contractData.trait_types_count
+            @contract.save!
     end
 
     def saveContractInfoModel(contractInfosData)
@@ -92,23 +92,24 @@ module ContractHelper
         @contractInfo = ContractInfo.where(contract_info_id: contract_info_id).first
         if @contractInfo.blank?
             @contractInfo = ContractInfo.new
+            @contractInfo.contract_info_id = contractInfosData.id
+            @contractInfo.contract =  contractInfosData.contract
+            @contractInfo.contract_id =  contractInfosData.contract_id
+            @contractInfo.price =  contractInfosData.price
+            @contractInfo.seller =  contractInfosData.seller
+            @contractInfo.owner =  contractInfosData.owner
+            @contractInfo.contract_address =  contractInfosData.contract_address
+            @contractInfo.nftSymbol =  contractInfosData.contract
+            @contractInfo.market_status =  contractInfosData.market_status
+            @contractInfo.dna =  contractInfosData.dna
+            @contractInfo.name =  contractInfosData.name
+            @contractInfo.description =  contractInfosData.description
+            @contractInfo.attributeString =  contractInfosData.attributes
+            @contractInfo.image =  contractInfosData.image
+            @contractInfo.tag_attribute_count =  contractInfosData.tag_attribute_count
+            @contractInfo.save!
         end
-        @contractInfo.contract_info_id = contractInfosData.id
-        @contractInfo.contract =  contractInfosData.contract
-        @contractInfo.contract_id =  contractInfosData.contract_id
-        @contractInfo.price =  contractInfosData.price
-        @contractInfo.seller =  contractInfosData.seller
-        @contractInfo.owner =  contractInfosData.owner
-        @contractInfo.contract_address =  contractInfosData.contract_address
-        @contractInfo.nftSymbol =  contractInfosData.contract
-        @contractInfo.market_status =  contractInfosData.market_status
-        @contractInfo.dna =  contractInfosData.dna
-        @contractInfo.name =  contractInfosData.name
-        @contractInfo.description =  contractInfosData.description
-        @contractInfo.attributeString =  contractInfosData.attributes
-        @contractInfo.image =  contractInfosData.image
-        @contractInfo.tag_attribute_count =  contractInfosData.tag_attribute_count
-        @contractInfo.save!
+        
         makeThumbnail(@contractInfo)
     end
     # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
