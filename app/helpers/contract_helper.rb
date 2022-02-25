@@ -132,9 +132,23 @@ module ContractHelper
                     logger.info(imageUrl)
                     image = MiniMagick::Image.open(imageUrl)
                     logger.info("//////// complete loading image ///////")
-                    image.resize "280x280"
-                    image.format "png"
-                    image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
+                    
+                    imageFormat = File.extname(URI.parse(imageUrl).path)
+                    if imageFormat.include? "."
+                        imageFormat["."] = ""
+                    end
+
+                    imageDimension_width = image.dimensions[0]
+
+                    if imageFormat == "gif"
+                        image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.gif")
+                    elsif imageDimension_width < 280
+                        image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
+                    else
+                        image.resize "280x280"
+                        image.format imageFormat
+                        image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
+                    end
                     File.chmod(0777,"#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
                 rescue => e
                     puts "# makeThumbnail error"
