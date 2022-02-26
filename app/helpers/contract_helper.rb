@@ -54,9 +54,10 @@ module ContractHelper
         allErrors.each do |error_item|
             if contract_name.include? "nomstronaut"
             else
-                contract_name = error_item.contract_name
-                fetchIPFSImage(contract_name)
+                sleep(2)
             end
+            contract_name = error_item.contract_name
+            fetchIPFSImage(contract_name)
         end
         logger.info("---------fetchAllErrorImages completed -------")
     end
