@@ -30,8 +30,15 @@ module ContractHelper
         logger.info("---------fetchContractDetail completed -------")
     end
 
+    def fetchIPFS
+        errorLogs = ErrorImageItem.all.first(10)
+        errorLogs.each do |error_item|
+            contract_name = error_item.contract_name
+            fetchIPFSImage(contract_name)
+        end
+    end
+
     def fetchIPFSImage(contract_name)
-        logger.info("---------fetchIPFSImage started -------")
         contractInfo = ContractInfo.find_by(contract_info_id:contract_name)
         if contractInfo.present?
             errorLogs = ErrorImageItem.find_by(contract_name:contractInfo.contract_info_id)
@@ -40,14 +47,16 @@ module ContractHelper
             end
             makeThumbnail(contractInfo)
         end
-        logger.info("---------fetchIPFSImage completed -------")
     end
 
     def fetchAllErrorImages
         allErrors = ErrorImageItem.all
         allErrors.each do |error_item|
-            contract_name = error_item.contract_name
-            fetchIPFSImage(contract_name)
+            if contract_name.include? "nomstronaut"
+            else
+                contract_name = error_item.contract_name
+                fetchIPFSImage(contract_name)
+            end
         end
         logger.info("---------fetchAllErrorImages completed -------")
     end
@@ -140,16 +149,18 @@ module ContractHelper
 
                     imageDimension_width = image.dimensions[0]
 
+                    targetFileName = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
                     if imageFormat == "gif"
-                        image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.gif")
+                        targetFileName = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.gif"
+                        image.write(targetFileName)
                     elsif imageDimension_width < 280
-                        image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
+                        image.write(targetFileName)
                     else
                         image.resize "280x280"
                         image.format imageFormat
-                        image.write("#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
+                        image.write(targetFileName)
                     end
-                    File.chmod(0777,"#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png")
+                    File.chmod(0777, targetFileName)
                 rescue => e
                     puts "# makeThumbnail error"
                     @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
