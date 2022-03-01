@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_23_005544) do
+ActiveRecord::Schema[7.0].define(version: 2022_02_28_091203) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -41,6 +41,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_23_005544) do
     t.string "attributeString"
     t.string "image"
     t.integer "tag_attribute_count"
+    t.string "tag_element0"
+    t.string "tag_element1"
+    t.string "tag_element2"
+    t.string "tag_element3"
+    t.string "tag_element4"
+    t.string "tag_element5"
+    t.string "tag_element6"
+    t.string "tag_element7"
+    t.string "tag_element8"
+    t.string "tag_element9"
+    t.string "tag_element10"
+    t.string "tag_element11"
+    t.string "tag_element12"
+    t.string "tag_element13"
+    t.string "tag_element14"
+    t.string "tag_element15"
   end
 
   create_table "contracts", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -77,6 +93,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_23_005544) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["contract_info_id"], name: "index_error_image_items_on_contract_info_id"
+  end
+
+  create_table "trait_values", charset: "utf8mb4", force: :cascade do |t|
+    t.string "trait_id"
+    t.string "address"
+    t.string "nft_symbol"
+    t.string "trait_type"
+    t.string "trait_value"
+    t.integer "use_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

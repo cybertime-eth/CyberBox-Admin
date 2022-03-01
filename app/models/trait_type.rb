@@ -1,0 +1,2 @@
+class TraitType < ApplicationRecord
+end

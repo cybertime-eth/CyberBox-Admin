@@ -53,13 +53,58 @@ module ContractHelper
         allErrors = ErrorImageItem.all
         allErrors.each do |error_item|
             contract_name = error_item.contract_name
-            if contract_name.include? "nomstronaut"
-            else
-                sleep(2)
-            end
             fetchIPFSImage(contract_name)
         end
         logger.info("---------fetchAllErrorImages completed -------")
+    end
+
+    def fetchAllTraitValues(address)
+        from = 0
+        fetch_count = 50
+        page_count = 50
+
+        while fetch_count > 0
+            fetch_datas = fetchTraitTypes(from, page_count, address)
+            fetch_count = fetch_datas.count
+            from = from + fetch_count
+            fetch_datas.each do |data|
+                fetch_id = data.id
+                @traitType = TraitType.where(trait_type_id: fetch_id).first
+                if @traitType.blank?
+                    @traitType = TraitType.new
+                end
+                @traitType.trait_type_id = data.id
+                @traitType.address = address
+                @traitType.nft_symbol = data.nft_symbol
+                @traitType.trait_type = data.trait_type
+                @traitType.trait_index = data.trait_index
+                @traitType.save!
+            end
+        end
+
+
+        from = 0
+        fetch_count = 50
+        page_count = 50
+        while fetch_count > 0
+            fetch_datas = fetchTraitValues(from, page_count, address)
+            fetch_count = fetch_datas.count
+            from = from + fetch_count
+            fetch_datas.each do |data|
+                fetch_id = data.id
+                @trait = TraitValue.where(trait_id: fetch_id).first
+                if @trait.blank?
+                    @trait = TraitValue.new
+                end
+                @trait.trait_id = data.id
+                @trait.address = address
+                @trait.nft_symbol = data.nft_symbol
+                @trait.trait_type = data.trait_type
+                @trait.trait_value = data.trait_value
+                @trait.use_count = data.use_count
+                @trait.save!
+            end
+        end
     end
 
 
@@ -102,23 +147,39 @@ module ContractHelper
         @contractInfo = ContractInfo.where(contract_info_id: contract_info_id).first
         if @contractInfo.blank?
             @contractInfo = ContractInfo.new
-            @contractInfo.contract_info_id = contractInfosData.id
-            @contractInfo.contract =  contractInfosData.contract
-            @contractInfo.contract_id =  contractInfosData.contract_id
-            @contractInfo.price =  contractInfosData.price
-            @contractInfo.seller =  contractInfosData.seller
-            @contractInfo.owner =  contractInfosData.owner
-            @contractInfo.contract_address =  contractInfosData.contract_address
-            @contractInfo.nftSymbol =  contractInfosData.contract
-            @contractInfo.market_status =  contractInfosData.market_status
-            @contractInfo.dna =  contractInfosData.dna
-            @contractInfo.name =  contractInfosData.name
-            @contractInfo.description =  contractInfosData.description
-            @contractInfo.attributeString =  contractInfosData.attributes
-            @contractInfo.image =  contractInfosData.image
-            @contractInfo.tag_attribute_count =  contractInfosData.tag_attribute_count
-            @contractInfo.save!
         end
+        @contractInfo.contract_info_id = contractInfosData.id
+        @contractInfo.contract =  contractInfosData.contract
+        @contractInfo.contract_id =  contractInfosData.contract_id
+        @contractInfo.price =  contractInfosData.price
+        @contractInfo.seller =  contractInfosData.seller
+        @contractInfo.owner =  contractInfosData.owner
+        @contractInfo.contract_address =  contractInfosData.contract_address
+        @contractInfo.nftSymbol =  contractInfosData.contract
+        @contractInfo.market_status =  contractInfosData.market_status
+        @contractInfo.dna =  contractInfosData.dna
+        @contractInfo.name =  contractInfosData.name
+        @contractInfo.description =  contractInfosData.description
+        @contractInfo.attributeString =  contractInfosData.attributes
+        @contractInfo.image =  contractInfosData.image
+        @contractInfo.tag_attribute_count =  contractInfosData.tag_attribute_count
+        @contractInfo.tag_element0 = contractInfosData.tag_element0
+        @contractInfo.tag_element1 = contractInfosData.tag_element1
+        @contractInfo.tag_element2 = contractInfosData.tag_element2
+        @contractInfo.tag_element3 = contractInfosData.tag_element3
+        @contractInfo.tag_element4 = contractInfosData.tag_element4
+        @contractInfo.tag_element5 = contractInfosData.tag_element5
+        @contractInfo.tag_element6 = contractInfosData.tag_element6
+        @contractInfo.tag_element7 = contractInfosData.tag_element7
+        @contractInfo.tag_element8 = contractInfosData.tag_element8
+        @contractInfo.tag_element9 = contractInfosData.tag_element9
+        @contractInfo.tag_element10 = contractInfosData.tag_element10
+        @contractInfo.tag_element11 = contractInfosData.tag_element11
+        @contractInfo.tag_element12 = contractInfosData.tag_element12
+        @contractInfo.tag_element13 = contractInfosData.tag_element13
+        @contractInfo.tag_element14= contractInfosData.tag_element14
+        @contractInfo.tag_element15= contractInfosData.tag_element15
+        @contractInfo.save!
         
         makeThumbnail(@contractInfo)
     end
@@ -287,10 +348,75 @@ module ContractHelper
                     attributes
                     image
                     tag_attribute_count
+                    tag_element0
+                    tag_element1
+                    tag_element2
+                    tag_element3
+                    tag_element4
+                    tag_element5
+                    tag_element6
+                    tag_element7
+                    tag_element8
+                    tag_element9
+                    tag_element10
+                    tag_element11
+                    tag_element12
+                    tag_element13
+                    tag_element14
+                    tag_element15
                 end
             end
         end
         response.data.contract_infos
+    end
+
+    def fetchTraitTypes(from, count, address)
+        client = Graphlient::Client.new(GRAPHQL_ENDPOINT,
+                headers: {
+                    'Authorization' => "Bearer #{GRAPHQL_TOKEN}"
+                },
+                http_options: {
+                    read_timeout: 20,
+                    write_timeout: 30
+                }
+        )
+        response = client.query do
+            query do
+                traitTypes(where:{address:"#{address}"}, skip:from, first:count) do
+                    id
+                    address
+                    nftSymbol
+                    traitType
+                    traitIndex
+                end
+            end
+        end
+        response.data.trait_types
+    end
+
+    def fetchTraitValues(from, count, address)
+        client = Graphlient::Client.new(GRAPHQL_ENDPOINT,
+                headers: {
+                    'Authorization' => "Bearer #{GRAPHQL_TOKEN}"
+                },
+                http_options: {
+                    read_timeout: 20,
+                    write_timeout: 30
+                }
+        )
+        response = client.query do
+            query do
+                traitValues(where:{address:"#{address}"}, skip:from, first:count) do
+                    id
+                    address
+                    nftSymbol
+                    traitType
+                    traitValue
+                    useCount
+                end
+            end
+        end
+        response.data.trait_values
     end
 
 end
