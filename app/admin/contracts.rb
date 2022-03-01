@@ -27,6 +27,9 @@ ActiveAdmin.register Contract do
   member_action :fetch_traits, :method=>:get do
   end
 
+  member_action :calc_raiting, :method=>:get do
+  end
+
   index do
     column :id
     column :"nftName" do |contract|
@@ -38,6 +41,7 @@ ActiveAdmin.register Contract do
     column :"mint_count" do |contract|
       contract.mint_count
     end
+    
     column() do |contract|
       link_to 'Fetch NFT', fetch_admin_contract_path(contract), :data => {:confirm => 'Are you sure? It will take more minutes.'}
     end
@@ -46,6 +50,10 @@ ActiveAdmin.register Contract do
     end
     column() do |contract|
       link_to 'Fetch Traits', fetch_traits_admin_contract_path(contract), :data => {:confirm => 'Are you sure? It will take more minutes.'}
+    end
+
+    column() do |contract|
+      link_to 'Calc Rating', calc_raiting_admin_contract_path(contract), :data => {:confirm => 'Are you sure? It will take more minutes.'}
     end
 
     actions
@@ -66,6 +74,12 @@ ActiveAdmin.register Contract do
     def fetch_traits
       @contract = Contract.find(params[:id])
       helpers.fetchAllTraitValues(@contract.nftAddress)
+      redirect_to admin_contracts_path, notice: "Fetching information started"
+    end
+
+    def calc_raiting
+      @contract = Contract.find(params[:id])
+      helpers.makeRating(@contract.nftAddress)
       redirect_to admin_contracts_path, notice: "Fetching information started"
     end
   end
