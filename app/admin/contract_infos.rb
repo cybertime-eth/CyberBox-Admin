@@ -32,7 +32,10 @@ ActiveAdmin.register ContractInfo do
     column :"rating_index" do |contract_info|
       contract_info.rating_index
     end
-    
+    actions
+  end
+
+  controller do
   end
 
   filter :id_eq
