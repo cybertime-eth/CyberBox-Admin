@@ -83,3 +83,4 @@ gem 'draper'
 gem 'pundit'
 
 gem 'therubyracer',  platforms: :ruby
+gem "rack-cors"
