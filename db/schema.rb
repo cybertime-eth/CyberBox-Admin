@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_28_091203) do
+ActiveRecord::Schema[7.0].define(version: 2022_02_28_091213) do
   create_table "active_admin_comments", charset: "utf8mb4", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -93,6 +93,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_28_091203) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["contract_info_id"], name: "index_error_image_items_on_contract_info_id"
+  end
+
+  create_table "trait_types", charset: "utf8mb4", force: :cascade do |t|
+    t.string "trait_type_id"
+    t.string "address"
+    t.string "nft_symbol"
+    t.string "trait_type"
+    t.integer "trait_index"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "trait_values", charset: "utf8mb4", force: :cascade do |t|
