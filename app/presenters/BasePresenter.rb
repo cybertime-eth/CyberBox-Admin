@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BasePresenter
+    attr_accessor :model
+    
     def initialize(options = {})
       options.map { |k, v| send("#{k}=", v) if respond_to?("#{k}=") }
     end
