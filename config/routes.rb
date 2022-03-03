@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :contract_infos do
         collection do
           get :getNfts
+          post :getCollections 
         end
       end
     end
