@@ -11,7 +11,7 @@ module Api
 
 
         def getCollections
-          nft_ids = params["data"]["contract_ids"]
+          nft_ids = params["contract_ids"]
           nfts = ContractInfo.where(contract_info_id:nft_ids)
           render_presenters nfts
         end
