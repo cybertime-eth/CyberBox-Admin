@@ -54,7 +54,6 @@ module ContractHelper
         allErrors.each do |error_item|
             contract_name = error_item.contract_name
             fetchIPFSImage(contract_name)
-            sleep(rand(8))
         end
         logger.info("---------fetchAllErrorImages completed -------")
     end
@@ -227,6 +226,7 @@ module ContractHelper
                 rescue => e
                     puts "# makeThumbnail error"
                     @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
+                    sleep(8)
                 end
             end
         end
