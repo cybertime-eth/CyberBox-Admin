@@ -226,7 +226,7 @@ module ContractHelper
                 rescue => e
                     puts "# makeThumbnail error"
                     @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
-                    sleep(8)
+                    sleep(30)
                 end
             end
         end
