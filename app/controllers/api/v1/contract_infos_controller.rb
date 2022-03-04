@@ -1,7 +1,7 @@
 module Api
     module V1
       class ContractInfosController < Api::V1::BaseController
-        
+        skip_before_action :verify_authenticity_token
         def getNfts
           nft_symbol = params["nft"]
           from = params["from"]
