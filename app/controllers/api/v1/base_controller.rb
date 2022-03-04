@@ -3,6 +3,9 @@
 module Api
     module V1
       class BaseController < ApplicationController
+        protect_from_forgery with: :null_session
+
+
         def render_presenters(entities, klass = nil)
           klass ||= entities.first.class
           klass = klass.to_s

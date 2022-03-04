@@ -1,6 +1,7 @@
 module Api
     module V1
       class ContractInfosController < Api::V1::BaseController
+        
         def getNfts
           nft_symbol = params["nft"]
           from = params["from"]
