@@ -54,6 +54,7 @@ module ContractHelper
         allErrors.each do |error_item|
             contract_name = error_item.contract_name
             fetchIPFSImage(contract_name)
+            sleep(rand(8))
         end
         logger.info("---------fetchAllErrorImages completed -------")
     end
