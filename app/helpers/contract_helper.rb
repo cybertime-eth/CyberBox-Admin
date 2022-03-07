@@ -432,7 +432,6 @@ module ContractHelper
         contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value)
         rating_index = totalCount
         contractInfos.each do |data|
-            ratingSum = calcRatingSum(data)
             data.rating_index = rating_index
             data.save!
             rating_index = rating_index - 1
