@@ -501,7 +501,9 @@ module ContractHelper
         results = ActiveRecord::Base.connection.execute(sql)
         if results.present?
             results.each do |row|
-                total_sum += 100 / ((row.first * 100) / totalCount)
+                if row.first > 0
+                    total_sum += 100 / ((row.first * 100) / totalCount)
+                end
             end
         end
 
