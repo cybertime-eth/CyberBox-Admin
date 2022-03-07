@@ -426,8 +426,9 @@ module ContractHelper
         contractInfos.each do |data|
             ratingSum = calcRatingSum(data)
             data.rating_value = ratingSum
+            data.save!
         end
-        contractInfos = contractInfos.order(:rating_value)
+        contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value).order(:contract_id)
         rating_index = 1
         contractInfos.each do |data|
             ratingSum = calcRatingSum(data)
