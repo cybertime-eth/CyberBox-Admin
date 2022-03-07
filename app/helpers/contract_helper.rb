@@ -438,7 +438,7 @@ module ContractHelper
         end
     end
 
-    def calcRatingSum(contractInfo)
+    def calcRatingSum(contractInfo, totalCount)
         sql = "select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
         sql = sql + "type.trait_index = 0 where trait_values.trait_value = '#{contractInfo.tag_element0}' and trait_values.address = '#{contractInfo.contract_address}'"
         if contractInfo.tag_element1.present?
@@ -501,7 +501,7 @@ module ContractHelper
         results = ActiveRecord::Base.connection.execute(sql)
         if results.present?
             results.each do |row|
-                total_sum += row.first
+                total_sum += 100 / ((row.first * 100) / totalCount)
             end
         end
 
