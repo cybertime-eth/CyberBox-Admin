@@ -424,7 +424,7 @@ module ContractHelper
     def makeRating(contract_address)
         contractInfos = ContractInfo.where(contract_address: contract_address)
         contractInfos.each do |data|
-            ratingSum = calcRatingSum(data)
+            ratingSum = calcRatingSum(data, contractInfos.count)
             data.rating_value = ratingSum
             data.save!
         end
