@@ -29,6 +29,9 @@ ActiveAdmin.register ContractInfo do
     column :"contract id" do |contract_info|
       contract_info.contract_id
     end
+    column :"rating_value" do |contract_info|
+      contract_info.rating_value
+    end
     column :"rating_index" do |contract_info|
       contract_info.rating_index
     end
