@@ -16,6 +16,21 @@ module Api
           nfts = ContractInfo.where(contract_info_id:nft_ids)
           render_presenters nfts
         end
+
+        def getRarityNfts
+          nft_symbol = params["symbol"]
+          direction = params["direction"]
+          start_id = params["from"].to_i
+          count = params["count"].to_i
+          
+          if direction == "desc"
+            contracts = ContractInfo.where(contract: nft_symbol).order(rating_index: :desc).offset(start_id).limit(count)
+            render_presenters contracts, ContractInfo
+          else
+            contracts = ContractInfo.where(contract: nft_symbol).order(:rating_index).offset(start_id).limit(count)
+            render_presenters contracts, ContractInfo
+          end
+        end
       end
     end
 end
