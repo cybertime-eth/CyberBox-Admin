@@ -440,62 +440,62 @@ module ContractHelper
 
     def calcRatingSum(contractInfo)
         sql = "select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-        sql = sql + "type.trait_index = 0 where trait_values.trait_value = '#{contractInfo.tag_element0}'"
+        sql = sql + "type.trait_index = 0 where trait_values.trait_value = '#{contractInfo.tag_element0}' and trait_values.address = '#{contractInfo.contract_address}'"
         if contractInfo.tag_element1.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 1 where trait_values.trait_value = '#{contractInfo.tag_element1}'"
+            sql = sql + "type.trait_index = 1 where trait_values.trait_value = '#{contractInfo.tag_element1}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element2.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 2 where trait_values.trait_value = '#{contractInfo.tag_element2}'"
+            sql = sql + "type.trait_index = 2 where trait_values.trait_value = '#{contractInfo.tag_element2}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element3.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 3 where trait_values.trait_value = '#{contractInfo.tag_element3}'"
+            sql = sql + "type.trait_index = 3 where trait_values.trait_value = '#{contractInfo.tag_element3}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element4.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 4 where trait_values.trait_value = '#{contractInfo.tag_element4}'"
+            sql = sql + "type.trait_index = 4 where trait_values.trait_value = '#{contractInfo.tag_element4}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element5.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 5 where trait_values.trait_value = '#{contractInfo.tag_element5}'"
+            sql = sql + "type.trait_index = 5 where trait_values.trait_value = '#{contractInfo.tag_element5}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element6.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 6 where trait_values.trait_value = '#{contractInfo.tag_element6}'"
+            sql = sql + "type.trait_index = 6 where trait_values.trait_value = '#{contractInfo.tag_element6}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element7.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 7 where trait_values.trait_value = '#{contractInfo.tag_element7}'"
+            sql = sql + "type.trait_index = 7 where trait_values.trait_value = '#{contractInfo.tag_element7}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element8.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 8 where trait_values.trait_value = '#{contractInfo.tag_element8}'"
+            sql = sql + "type.trait_index = 8 where trait_values.trait_value = '#{contractInfo.tag_element8}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element9.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 9 where trait_values.trait_value = '#{contractInfo.tag_element9}'"
+            sql = sql + "type.trait_index = 9 where trait_values.trait_value = '#{contractInfo.tag_element9}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element10.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 10 where trait_values.trait_value = '#{contractInfo.tag_element10}'"
+            sql = sql + "type.trait_index = 10 where trait_values.trait_value = '#{contractInfo.tag_element10}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element11.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 11 where trait_values.trait_value = '#{contractInfo.tag_element11}'"
+            sql = sql + "type.trait_index = 11 where trait_values.trait_value = '#{contractInfo.tag_element11}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element12.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 12 where trait_values.trait_value = '#{contractInfo.tag_element12}'"
+            sql = sql + "type.trait_index = 12 where trait_values.trait_value = '#{contractInfo.tag_element12}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element13.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 13 where trait_values.trait_value = '#{contractInfo.tag_element13}'"
+            sql = sql + "type.trait_index = 13 where trait_values.trait_value = '#{contractInfo.tag_element13}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         if contractInfo.tag_element14.present?
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
-            sql = sql + "type.trait_index = 14 where trait_values.trait_value = '#{contractInfo.tag_element14}'"
+            sql = sql + "type.trait_index = 14 where trait_values.trait_value = '#{contractInfo.tag_element14}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
         total_sum = 0
         results = ActiveRecord::Base.connection.execute(sql)
@@ -506,6 +506,15 @@ module ContractHelper
         end
 
         return total_sum
+    end
+
+    def runningQuery(query)
+        results = ActiveRecord::Base.connection.execute(query)
+        if results.present?
+            results.each do |row|
+                puts row
+            end
+        end
     end
 
 end
