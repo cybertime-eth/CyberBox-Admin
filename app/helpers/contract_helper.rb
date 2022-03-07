@@ -428,7 +428,7 @@ module ContractHelper
             data.rating_value = ratingSum
             data.save!
         end
-        contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value).order(:contract_id)
+        contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value).reverse
         rating_index = 1
         contractInfos.each do |data|
             ratingSum = calcRatingSum(data)
@@ -502,10 +502,10 @@ module ContractHelper
         if results.present?
             results.each do |row|
                 if row.first > 0
-                    value = row.first
-                    percent = (row.first * 100) / totalCount
+                    value = row.first.to_f
+                    percent = (row.first * 100.to_f) / totalCount.to_f
                     if percent > 0
-                        total_sum += 100 / percent
+                        total_sum += 100.to_f / percent.to_f
                     end
                 end
             end
