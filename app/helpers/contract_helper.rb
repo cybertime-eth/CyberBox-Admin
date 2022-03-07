@@ -1,5 +1,5 @@
 module ContractHelper
-    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/celo-add-chin-chilla"
+    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/celo-cespresso"
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
@@ -226,7 +226,7 @@ module ContractHelper
                 rescue => e
                     puts "# makeThumbnail error"
                     @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
-                    sleep(30)
+                    # sleep(30)
                 end
             end
         end
