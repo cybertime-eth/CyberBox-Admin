@@ -423,12 +423,13 @@ module ContractHelper
 
     def makeRating(contract_address)
         contractInfos = ContractInfo.where(contract_address: contract_address)
+        totalCount = contractInfos.count
         contractInfos.each do |data|
-            ratingSum = calcRatingSum(data, contractInfos.count)
+            ratingSum = calcRatingSum(data, totalCount)
             data.rating_value = ratingSum
             data.save!
         end
-        contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value).reverse
+        contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value).reverse!
         rating_index = 1
         contractInfos.each do |data|
             ratingSum = calcRatingSum(data)
