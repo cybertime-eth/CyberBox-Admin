@@ -502,7 +502,11 @@ module ContractHelper
         if results.present?
             results.each do |row|
                 if row.first > 0
-                    total_sum += 100 / ((row.first * 100) / totalCount)
+                    value = row.first
+                    percent = (row.first * 100) / totalCount
+                    if percent > 0
+                        total_sum += 100 / percent
+                    end
                 end
             end
         end
