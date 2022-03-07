@@ -422,19 +422,27 @@ module ContractHelper
 
 
     def makeRating(contract_address)
-        contractInfos = ContractInfo.where(contract_address: contract_address)
-        totalCount = contractInfos.count
-        contractInfos.each do |data|
-            ratingSum = calcRatingSum(data, totalCount)
-            data.rating_value = ratingSum
-            data.save!
-        end
-        contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value)
-        rating_index = totalCount
-        contractInfos.each do |data|
-            data.rating_index = rating_index
-            data.save!
-            rating_index = rating_index - 1
+        if contract_address == "0x07b6c9d6bb32655a70d97a38a9274da349a1efaf" #####cpunkneon
+            contractInfos = ContractInfo.where(contract_address: contract_address)
+            contractInfos.each do |data|
+                data.rating_index = data.tag_element0.to_i
+                data.save!
+            end
+        else
+            contractInfos = ContractInfo.where(contract_address: contract_address)
+            totalCount = contractInfos.count
+            contractInfos.each do |data|
+                ratingSum = calcRatingSum(data, totalCount)
+                data.rating_value = ratingSum
+                data.save!
+            end
+            contractInfos = ContractInfo.where(contract_address: contract_address).order(:rating_value)
+            rating_index = totalCount
+            contractInfos.each do |data|
+                data.rating_index = rating_index
+                data.save!
+                rating_index = rating_index - 1
+            end
         end
     end
 
