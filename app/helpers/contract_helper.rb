@@ -181,7 +181,9 @@ module ContractHelper
         @contractInfo.tag_element15= contractInfosData.tag_element15
         @contractInfo.save!
         
-        makeThumbnail(@contractInfo)
+        if @contractInfo.nftSymbol != "christmaspunk"
+            makeThumbnail(@contractInfo)
+        end
     end
     # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
     # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
