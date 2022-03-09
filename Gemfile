@@ -86,3 +86,5 @@ gem 'therubyracer',  platforms: :ruby
 gem "rack-cors"
 
 gem 'sidekiq'
+gem 'rmagick'
+#sudo apt-get install libmagickwand-dev

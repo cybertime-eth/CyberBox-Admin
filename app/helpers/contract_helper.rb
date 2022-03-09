@@ -1,5 +1,5 @@
 module ContractHelper
-    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/celo-cespresso"
+    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/celo-moopunk-attribute-two"
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
@@ -449,6 +449,8 @@ module ContractHelper
     end
 
     def calcRatingSum(contractInfo, totalCount)
+        if contractInfo.contract_address == "0x517bce2ddbc21b9a8771dfd3db40404bdef1272d" ##moopunk
+        end
         sql = "select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
         sql = sql + "type.trait_index = 0 where trait_values.trait_value = '#{contractInfo.tag_element0}' and trait_values.address = '#{contractInfo.contract_address}'"
         if contractInfo.tag_element1.present?
@@ -507,6 +509,21 @@ module ContractHelper
             sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
             sql = sql + "type.trait_index = 14 where trait_values.trait_value = '#{contractInfo.tag_element14}' and trait_values.address = '#{contractInfo.contract_address}'"
         end
+
+        if contractInfo.contract_address == "0x517bce2ddbc21b9a8771dfd3db40404bdef1272d" ## moopunk
+            sql = "select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
+            sql = sql + "type.trait_index = 0 where trait_values.trait_value = '#{contractInfo.tag_element0}' and trait_values.address = '#{contractInfo.contract_address}'"
+            sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
+            sql = sql + "type.trait_index = 1 where trait_values.trait_value = '#{contractInfo.tag_element1}' and trait_values.address = '#{contractInfo.contract_address}'"
+            sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
+            sql = sql + "type.trait_index = 1 where trait_values.trait_value = '#{contractInfo.tag_element2}' and trait_values.address = '#{contractInfo.contract_address}'"
+            sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
+            sql = sql + "type.trait_index = 1 where trait_values.trait_value = '#{contractInfo.tag_element3}' and trait_values.address = '#{contractInfo.contract_address}'"
+            sql = sql + " union select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
+            sql = sql + "type.trait_index = 1 where trait_values.trait_value = '#{contractInfo.tag_element4}' and trait_values.address = '#{contractInfo.contract_address}'"
+        end
+
+
         total_sum = 0
         results = ActiveRecord::Base.connection.execute(sql)
         if results.present?
@@ -531,6 +548,33 @@ module ContractHelper
                 puts row
             end
         end
+    end
+
+    def drawTextToNomImage(text)
+        draw_text = text
+        perline_charactor = 10
+        if text.length > perline_charactor
+            drawTextIndex = 0
+            textArray = []
+            while drawTextIndex <= text.length
+                textArray.push(text.from(drawTextIndex).first(perline_charactor))
+                drawTextIndex = drawTextIndex + perline_charactor
+            end
+            draw_text = textArray.map {|str| "#{str}"}.join("\n")
+        end
+        imagePath = "#{Rails.root}/public/nomspace.png"
+        fontPath = "#{Rails.root}/public/Sen-Bold.ttf"
+        outpath = "#{Rails.root}/public/generated.png"
+
+        img = Magick::ImageList.new(imagePath)
+        txt = Magick::Draw.new
+        img.annotate(txt, 0,0,0,0, draw_text) do
+            txt.gravity = Magick::CenterGravity
+            txt.pointsize = 60
+            txt.fill = "#5452FC"
+            txt.font = fontPath
+        end
+        img.write(outpath)
     end
 
 end
