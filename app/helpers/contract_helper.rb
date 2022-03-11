@@ -196,7 +196,8 @@ module ContractHelper
             imageName = contract_info_obj.image
             imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{imageName}.png"
             if File.exist?(imagePath) == false
-              drawTextToNomImage(contract_info_obj.name, imageName)
+                FileUtils.mkdir_p "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/"
+                drawTextToNomImage(contract_info_obj.name, imageName)
             end
             return
         end
