@@ -347,7 +347,7 @@ module ContractHelper
         )
         response = client.query do
             query do
-                contractInfos(where:{contract:"#{nftSymbol}", contract_id_lt:count + 1, contract_id_gt:from - 1}) do
+                contractInfos(where:{nftSymbol:"#{nftSymbol}", contract_id_lt:count + 1, contract_id_gt:from - 1}) do
                     id
                     contract
                     contract_id
