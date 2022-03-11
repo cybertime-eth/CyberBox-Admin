@@ -567,7 +567,7 @@ module ContractHelper
     end
 
     def drawTextToNomImage(text, imageId)
-        draw_text = text
+        draw_text = text + ".nom"
         perline_charactor = 10
         if text.length > perline_charactor
             drawTextIndex = 0
