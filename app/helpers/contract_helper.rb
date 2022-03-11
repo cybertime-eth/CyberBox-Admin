@@ -188,14 +188,14 @@ module ContractHelper
     # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
     # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
     def makeThumbnail(contract_info_obj)
-        if(contract_info_obj.nftSymbol == "nomdom"){
+        if contract_info_obj.nftSymbol == "nomdom"
             imageName = contract_info_obj.image
             imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{imageName}.png"
             if File.exist?(imagePath) == false
               drawTextToNomImage(contract_info_obj.name, imageName)
             end
             return
-        }
+        end
         imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
         if File.exist?(imagePath) == false
             FileUtils.mkdir_p "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/"
