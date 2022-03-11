@@ -152,7 +152,7 @@ module ContractHelper
             @contractInfo = ContractInfo.new
         end
         nftSymbol = contractInfosData.contract
-        if nftAddress == "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
+        if contractInfosData.contract_address == "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
             nftSymbol = "nomdom"
         end
 
