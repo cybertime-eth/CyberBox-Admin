@@ -17,11 +17,14 @@ module ContractHelper
         contract_data = fetchTheGraphContract(nftAddress)
         saveContractModel(contract_data)
         all_mint_count =  contract_data.mint_count
-        nftSymbil = contract_data.nft_symbol
+        nftSymbol = contract_data.nft_symbol
+        if nftAddress == "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
+            nftSymbol = "nomdom"
+        end
         start_index = 0
         per_page_count = 50
         while start_index < all_mint_count
-            contractInfo_datas = fetchTheGraphContractDetail(start_index, start_index + per_page_count, nftSymbil)
+            contractInfo_datas = fetchTheGraphContractDetail(start_index, start_index + per_page_count, nftSymbol)
             contractInfo_datas.each do |contractInfo_data|
                 saveContractInfoModel(contractInfo_data)
             end
