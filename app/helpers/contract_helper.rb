@@ -188,6 +188,14 @@ module ContractHelper
     # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
     # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
     def makeThumbnail(contract_info_obj)
+        if(contract_info_obj.nftSymbol == "nomdom"){
+            imageName = contract_info_obj.image
+            imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{imageName}.png"
+            if File.exist?(imagePath) == false
+              drawTextToNomImage(contract_info_obj.name, imageName)
+            end
+            return
+        }
         imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
         if File.exist?(imagePath) == false
             FileUtils.mkdir_p "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/"
@@ -548,7 +556,7 @@ module ContractHelper
         end
     end
 
-    def drawTextToNomImage(text)
+    def drawTextToNomImage(text, imageId)
         draw_text = text
         perline_charactor = 10
         if text.length > perline_charactor
@@ -562,7 +570,7 @@ module ContractHelper
         end
         imagePath = "#{Rails.root}/public/nomspace.png"
         fontPath = "#{Rails.root}/public/Sen-Bold.ttf"
-        outpath = "#{Rails.root}/public/generated.png"
+        outpath = "#{Rails.root}/public/nomdom/#{imageId}.png"
 
         img = Magick::ImageList.new(imagePath)
         txt = Magick::Draw.new
