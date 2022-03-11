@@ -151,14 +151,19 @@ module ContractHelper
         if @contractInfo.blank?
             @contractInfo = ContractInfo.new
         end
+        nftSymbol = contractInfosData.contract
+        if nftAddress == "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
+            nftSymbol = "nomdom"
+        end
+
         @contractInfo.contract_info_id = contractInfosData.id
-        @contractInfo.contract =  contractInfosData.contract
+        @contractInfo.contract =  nftSymbol
         @contractInfo.contract_id =  contractInfosData.contract_id
         @contractInfo.price =  contractInfosData.price
         @contractInfo.seller =  contractInfosData.seller
         @contractInfo.owner =  contractInfosData.owner
         @contractInfo.contract_address =  contractInfosData.contract_address
-        @contractInfo.nftSymbol =  contractInfosData.contract
+        @contractInfo.nftSymbol =  nftSymbol
         @contractInfo.market_status =  contractInfosData.market_status
         @contractInfo.dna =  contractInfosData.dna
         @contractInfo.name =  contractInfosData.name
