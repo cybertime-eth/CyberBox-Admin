@@ -1,5 +1,5 @@
 module ContractHelper
-    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/celo-moopunk-attribute-two"
+    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/nom-registrar-three"
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
@@ -449,8 +449,6 @@ module ContractHelper
     end
 
     def calcRatingSum(contractInfo, totalCount)
-        if contractInfo.contract_address == "0x517bce2ddbc21b9a8771dfd3db40404bdef1272d" ##moopunk
-        end
         sql = "select use_count from trait_values JOIN trait_types type on trait_values.trait_type = type .trait_type and "
         sql = sql + "type.trait_index = 0 where trait_values.trait_value = '#{contractInfo.tag_element0}' and trait_values.address = '#{contractInfo.contract_address}'"
         if contractInfo.tag_element1.present?
