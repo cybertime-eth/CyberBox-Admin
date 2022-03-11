@@ -189,6 +189,7 @@ module ContractHelper
     # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
     def makeThumbnail(contract_info_obj)
         if contract_info_obj.nftSymbol == "nomdom"
+            puts "#{contract_info_obj.contract_id}"
             imageName = contract_info_obj.image
             imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{imageName}.png"
             if File.exist?(imagePath) == false
