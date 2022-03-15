@@ -609,7 +609,7 @@ module ContractHelper
                     start_index = db_mint_count
                     per_page_count = 50
                     while start_index < gf_mint_count
-                        contractInfo_datas = fetchTheGraphContractDetail(start_index, start_index + per_page_count, nftSymbol)
+                        contractInfo_datas = fetchTheGraphContractDetail(start_index, start_index + per_page_count, nft_symbol)
                         contractInfo_datas.each do |contractInfo_data|
                             saveContractInfoModel(contractInfo_data)
                         end
