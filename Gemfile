@@ -88,3 +88,4 @@ gem "rack-cors"
 gem 'sidekiq'
 gem 'rmagick'
 #sudo apt-get install libmagickwand-dev
+gem 'whenever', require: false
