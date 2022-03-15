@@ -617,7 +617,9 @@ module ContractHelper
                     end
                     logger.info("---------start new-ranking -------")
                     contract_address = @contract.contract_address
-                    makeRating(contract_address)
+                    if contract_address != "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
+                        makeRating(contract_address)
+                    end
                 end
 
             end
