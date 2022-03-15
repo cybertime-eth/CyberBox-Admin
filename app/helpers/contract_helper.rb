@@ -593,4 +593,36 @@ module ContractHelper
         img.write(outpath)
     end
 
+
+    def cronJobRefreshing
+        logger.info("---------fetch All Contracts -------")
+        contracts_data = fetchTheGraphAllContracts()
+        contracts_data.each do |contract_data|
+            nft_symbol = contracts_data.nft_symbol
+            logger.info("---------fetch All NFTs on #{nftSymbol} -------")
+            @contract = Contract.where(nftSymbol: nft_symbol).first
+            if @contract.present?
+                db_mint_count = @contract.mint_count
+                gf_mint_count = contracts_data.mint_count
+                logger.info("---------fetch All NFTs on #{gf_mint_count} / #{db_mint_count} -------")
+                if db_mint_count < gf_mint_count
+                    start_index = db_mint_count
+                    per_page_count = 50
+                    while start_index < gf_mint_count
+                        contractInfo_datas = fetchTheGraphContractDetail(start_index, start_index + per_page_count, nftSymbol)
+                        contractInfo_datas.each do |contractInfo_data|
+                            saveContractInfoModel(contractInfo_data)
+                        end
+                        start_index = start_index + per_page_count
+                    end
+                    logger.info("---------start new-ranking -------")
+                    contract_address = @contract.contract_address
+                    makeRating(contract_address)
+                end
+
+            end
+
+        end
+    end
+
 end
