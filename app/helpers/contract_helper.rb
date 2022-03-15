@@ -606,6 +606,7 @@ module ContractHelper
                 gf_mint_count = contract_data.mint_count
                 logger.info("---------fetch All NFTs on #{gf_mint_count} / #{db_mint_count} -------")
                 if db_mint_count < gf_mint_count
+                    saveContractModel(contract_data)
                     start_index = db_mint_count
                     per_page_count = 50
                     while start_index < gf_mint_count
@@ -616,7 +617,7 @@ module ContractHelper
                         start_index = start_index + per_page_count
                     end
                     logger.info("---------start new-ranking -------")
-                    contract_address = @contract.contract_address
+                    contract_address = @contract.nftAddress
                     if contract_address != "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
                         makeRating(contract_address)
                     end
