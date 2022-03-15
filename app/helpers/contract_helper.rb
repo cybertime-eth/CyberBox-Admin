@@ -221,6 +221,19 @@ module ContractHelper
                     if imageUrl.include? "ipfs://"
                         imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
                     end
+
+                    imageFormat = File.extname(URI.parse(imageUrl).path)
+                    if imageFormat.include? "."
+                        imageFormat["."] = ""
+                    end
+
+                    if imageFormat == "gif"
+                        targetFileName = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.gif"
+                        if File.exist?(targetFileName) == true
+                            return
+                        end
+                    end
+
                     MiniMagick.configure do |config|
                         config.timeout = 10
                     end
@@ -229,11 +242,6 @@ module ContractHelper
                     image = MiniMagick::Image.open(imageUrl)
                     logger.info("//////// complete loading image ///////")
                     
-                    imageFormat = File.extname(URI.parse(imageUrl).path)
-                    if imageFormat.include? "."
-                        imageFormat["."] = ""
-                    end
-
                     imageDimension_width = image.dimensions[0]
 
                     targetFileName = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
