@@ -144,7 +144,7 @@ module ContractHelper
             @contract.save!
     end
 
-    def saveContractInfoModel(contractInfosData)
+    def saveContractInfoModel(contractInfosData, image_fetch = true)
         puts "# saveContractInfoModel #{contractInfosData.id}}"
         contract_info_id = contractInfosData.id
         @contractInfo = ContractInfo.where(contract_info_id: contract_info_id).first
@@ -190,12 +190,12 @@ module ContractHelper
         @contractInfo.save!
         
         if @contractInfo.nftSymbol != "christmaspunk"
-            makeThumbnail(@contractInfo)
+            makeThumbnail(@contractInfo, image_fetch)
         end
     end
     # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
     # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
-    def makeThumbnail(contract_info_obj)
+    def makeThumbnail(contract_info_obj, image_fetch = true)
         if contract_info_obj.nftSymbol == "nomdom"
             puts "#{contract_info_obj.contract_id}"
             imageName = contract_info_obj.image
@@ -204,6 +204,11 @@ module ContractHelper
                 FileUtils.mkdir_p "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/"
                 drawTextToNomImage(contract_info_obj.name, imageName)
             end
+            return
+        end
+        if image_fetch == false
+            puts "# makeThumbnail error"
+                    @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
             return
         end
         imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
