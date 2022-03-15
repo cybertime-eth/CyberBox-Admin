@@ -599,7 +599,7 @@ module ContractHelper
         contracts_data = fetchTheGraphAllContracts()
         contracts_data.each do |contract_data|
             nft_symbol = contract_data.nft_symbol
-            logger.info("---------fetch All NFTs on #{nftSymbol} -------")
+            logger.info("---------fetch All NFTs on #{nft_symbol} -------")
             @contract = Contract.where(nftSymbol: nft_symbol).first
             if @contract.present?
                 db_mint_count = @contract.mint_count
