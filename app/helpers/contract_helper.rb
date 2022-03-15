@@ -623,7 +623,10 @@ module ContractHelper
                     end
                     logger.info("---------start new-ranking -------")
                     contract_address = @contract.nftAddress
-                    if contract_address != "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
+                    if contract_address != "0x046d19c5e5e8938d54fb02dcc396acf7f275490a" # nomdom
+                        logger.info("---------fetchAllTraitValues -------")
+                        fetchAllTraitValues(contract_address)
+                        logger.info("---------makeRating -------")
                         makeRating(contract_address)
                     end
                 end
