@@ -1,6 +1,6 @@
 class Contract < ApplicationRecord
 
     def contractCronFetch
-        helpers.cronJobRefreshing()
+        helper.cronJobRefreshing()
     end
 end
