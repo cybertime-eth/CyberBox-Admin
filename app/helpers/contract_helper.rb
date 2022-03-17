@@ -9,6 +9,8 @@ module ContractHelper
             saveContractModel(contract_data)
         end
 
+        #ContractInfo.where(contract_info_id:"1054_gang")
+
         logger.info("---------fetchAllContractDetail completed -------")
     end
 
