@@ -22,7 +22,7 @@ module ContractHelper
             nftSymbol = "nomdom"
         end
         start_index = 0
-        per_page_count = 50
+        per_page_count = 100
         while start_index < all_mint_count
             contractInfo_datas = fetchTheGraphContractDetail(start_index, start_index + per_page_count, nftSymbol)
             contractInfo_datas.each do |contractInfo_data|
@@ -63,8 +63,8 @@ module ContractHelper
 
     def fetchAllTraitValues(address)
         from = 0
-        fetch_count = 50
-        page_count = 50
+        fetch_count = 100
+        page_count = 100
 
         while fetch_count > 0
             fetch_datas = fetchTraitTypes(from, page_count, address)
@@ -87,8 +87,8 @@ module ContractHelper
 
 
         from = 0
-        fetch_count = 50
-        page_count = 50
+        fetch_count = 100
+        page_count = 100
         while fetch_count > 0
             fetch_datas = fetchTraitValues(from, page_count, address)
             fetch_count = fetch_datas.count
@@ -621,7 +621,7 @@ module ContractHelper
                 if db_mint_count < gf_mint_count
                     saveContractModel(contract_data)
                     start_index = db_mint_count
-                    per_page_count = 50
+                    per_page_count = 100
                     while start_index < gf_mint_count
                         contractInfo_datas = fetchTheGraphContractDetail(start_index, start_index + per_page_count, nft_symbol)
                         contractInfo_datas.each do |contractInfo_data|
