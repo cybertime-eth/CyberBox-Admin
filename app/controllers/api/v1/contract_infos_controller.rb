@@ -31,6 +31,12 @@ module Api
             render_presenters contracts, ContractInfo
           end
         end
+
+        def getFilteredCount
+          nft_symbol = params["symbol"]
+          filter_json = params["filter"].to_json
+          
+        end
       end
     end
 end

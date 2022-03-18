@@ -582,32 +582,59 @@ module ContractHelper
     end
 
     def drawTextToNomImage(text, imageId)
-        draw_text = text + ".nom"
-        perline_charactor = 10
-        if text.length > perline_charactor
-            drawTextIndex = 0
-            textArray = []
-            while drawTextIndex <= text.length
-                textArray.push(text.from(drawTextIndex).first(perline_charactor))
-                drawTextIndex = drawTextIndex + perline_charactor
-            end
-            draw_text = textArray.map {|str| "#{str}"}.join("\n")
-        end
         imagePath = "#{Rails.root}/public/nomspace.png"
-        fontPath = "#{Rails.root}/public/Sen-Bold.ttf"
+        fontPath = "#{Rails.root}/public/Arial-Unicode-Bold.ttf"
         outpath = "#{Rails.root}/public/nomdom/#{imageId}.png"
+        
+        font_size = 50
+        if text.length > 12
+            font_size = 46
+        elsif text.length > 24
+            font_size = 42
+        elsif text.length > 30
+            font_size = 38
+        end
+        text_st_pos_x = 50
+        text_st_pos_y = 250
+        text_limit_width = 400
+        text_limit_height = 250
 
+        draw_text = getMultilineText(text + ".nom", fontPath, font_size, text_limit_width)
+        
         img = Magick::ImageList.new(imagePath)
         txt = Magick::Draw.new
-        img.annotate(txt, 0,0,0,0, draw_text) do
-            txt.gravity = Magick::CenterGravity
-            txt.pointsize = 60
+        img.annotate(txt, text_limit_width, text_limit_height , text_st_pos_x, text_st_pos_y,  draw_text) do 
+            txt.pointsize = font_size
             txt.fill = "#5452FC"
             txt.font = fontPath
+            txt.align = Magick::LeftAlign
         end
         img.write(outpath)
     end
 
+    def getMultilineText(text, fontUrl, fontSize, limitLength)
+        multilineText = ""
+        label = Magick::Draw.new
+        label.font = fontUrl
+        label.pointsize = fontSize
+        label.text(0,0,text)
+
+        calcPosition = 1
+        chipPoint = 0
+        while calcPosition <= text.length
+            subString = text[chipPoint...calcPosition]
+            metrics = label.get_type_metrics(subString)
+            width = metrics.width
+            if width < limitLength
+                multilineText = multilineText + text[calcPosition-1...calcPosition]
+                calcPosition = calcPosition + 1
+            else
+                multilineText = multilineText + '\n'
+                chipPoint = calcPosition - 1
+            end
+        end
+        multilineText
+    end
 
     def cronJobRefreshing
         logger.info("---------fetch All Contracts -------")
