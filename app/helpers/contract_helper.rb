@@ -586,20 +586,24 @@ module ContractHelper
         fontPath = "#{Rails.root}/public/Arial-Unicode-Bold.ttf"
         outpath = "#{Rails.root}/public/nomdom/#{imageId}.png"
         
-        font_size = 50
-        if text.length > 12
-            font_size = 46
+        font_size = 60
+        if text.length > 0
+            font_size = 60
+        elsif text.length >12
+            font_size = 55
         elsif text.length > 24
-            font_size = 42
+            font_size = 50
         elsif text.length > 30
-            font_size = 38
+            font_size = 40
+        else
+            font_size = 50
         end
-        text_st_pos_x = 50
-        text_st_pos_y = 250
-        text_limit_width = 400
-        text_limit_height = 250
+        text_st_pos_x = 45
+        text_st_pos_y = 251
+        text_limit_width = 410
+        text_limit_height = 200
 
-        draw_text = getMultilineText(text + ".nom", fontPath, font_size, text_limit_width)
+        draw_text = getMultilineText(text, ".nom", fontPath, font_size, text_limit_width)
         
         img = Magick::ImageList.new(imagePath)
         txt = Magick::Draw.new
@@ -612,7 +616,7 @@ module ContractHelper
         img.write(outpath)
     end
 
-    def getMultilineText(text, fontUrl, fontSize, limitLength)
+    def getMultilineText(text, extension, fontUrl, fontSize, limitLength)
         multilineText = ""
         label = Magick::Draw.new
         label.font = fontUrl
@@ -621,10 +625,12 @@ module ContractHelper
 
         calcPosition = 1
         chipPoint = 0
+        last_width = 0
         while calcPosition <= text.length
             subString = text[chipPoint...calcPosition]
             metrics = label.get_type_metrics(subString)
             width = metrics.width
+            last_width = width
             if width < limitLength
                 multilineText = multilineText + text[calcPosition-1...calcPosition]
                 calcPosition = calcPosition + 1
@@ -632,6 +638,19 @@ module ContractHelper
                 multilineText = multilineText + '\n'
                 chipPoint = calcPosition - 1
             end
+        end
+
+        label = Magick::Draw.new
+        label.font = fontUrl
+        label.pointsize = fontSize
+        label.text(0,0,extension)
+        metrics = label.get_type_metrics(extension)
+        width = metrics.width
+
+        if last_width + width < limitLength
+            multilineText = multilineText + extension
+        else
+            multilineText = multilineText + '\n' + extension
         end
         multilineText
     end
