@@ -618,39 +618,43 @@ module ContractHelper
 
     def getMultilineText(text, extension, fontUrl, fontSize, limitLength)
         multilineText = ""
-        label = Magick::Draw.new
-        label.font = fontUrl
-        label.pointsize = fontSize
-        label.text(0,0,text)
-
-        calcPosition = 1
-        chipPoint = 0
-        last_width = 0
-        while calcPosition <= text.length
-            subString = text[chipPoint...calcPosition]
-            metrics = label.get_type_metrics(subString)
-            width = metrics.width
-            last_width = width
-            if width < limitLength
-                multilineText = multilineText + text[calcPosition-1...calcPosition]
-                calcPosition = calcPosition + 1
-            else
-                multilineText = multilineText + '\n'
-                chipPoint = calcPosition - 1
-            end
-        end
-
-        label = Magick::Draw.new
-        label.font = fontUrl
-        label.pointsize = fontSize
-        label.text(0,0,extension)
-        metrics = label.get_type_metrics(extension)
-        width = metrics.width
-
-        if last_width + width < limitLength
+        if text.length < 5
             multilineText = multilineText + extension
         else
-            multilineText = multilineText + '\n' + extension
+            label = Magick::Draw.new
+            label.font = fontUrl
+            label.pointsize = fontSize
+            label.text(0,0,text)
+
+            calcPosition = 1
+            chipPoint = 0
+            last_width = 0
+            while calcPosition <= text.length
+                subString = text[chipPoint...calcPosition]
+                metrics = label.get_type_metrics(subString)
+                width = metrics.width
+                last_width = width
+                if width < limitLength
+                    multilineText = multilineText + text[calcPosition-1...calcPosition]
+                    calcPosition = calcPosition + 1
+                else
+                    multilineText = multilineText + '\n'
+                    chipPoint = calcPosition - 1
+                end
+            end
+
+            label = Magick::Draw.new
+            label.font = fontUrl
+            label.pointsize = fontSize
+            label.text(0,0,extension)
+            metrics = label.get_type_metrics(extension)
+            width = metrics.width
+
+            if last_width + width < limitLength
+                multilineText = multilineText + extension
+            else
+                multilineText = multilineText + '\n' + extension
+            end
         end
         multilineText
     end
