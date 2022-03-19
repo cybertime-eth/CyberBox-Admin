@@ -619,7 +619,7 @@ module ContractHelper
     def getMultilineText(text, extension, fontUrl, fontSize, limitLength)
         multilineText = ""
         if text.length < 5
-            multilineText = multilineText + extension
+            multilineText = text + extension
         else
             label = Magick::Draw.new
             label.font = fontUrl
