@@ -614,13 +614,14 @@ module ContractHelper
             combined_image = backImg.composite(overlap_img,text_st_pos_x, text_st_pos_y, Magick::OverCompositeOp)
             combined_image.format = "png"
             combined_image.write(outpath)
+
         else
             img = Magick::ImageList.new(imagePath)
             txt = Magick::Draw.new
             img.annotate(txt, text_limit_width, text_limit_height , text_st_pos_x, text_st_pos_y,  draw_text) do 
                 txt.pointsize = font_size
                 txt.fill = "#5452FC"
-                txt.font = 'AppleColorEmoji.ttf'
+                txt.font = fontPath
                 txt.align = Magick::LeftAlign
             end
             img.write(outpath)
