@@ -583,7 +583,7 @@ module ContractHelper
 
     def drawTextToNomImage(text, imageId)
         imagePath = "#{Rails.root}/public/nomspace.png"
-        fontPath = "#{Rails.root}/public/AppleColorEmoji.ttf"
+        fontPath = "#{Rails.root}/public/Arial-Unicode-Bold.ttf"
         outpath = "#{Rails.root}/public/nomdom/#{imageId}.png"
         
         font_size = 60
