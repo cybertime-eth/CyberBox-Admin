@@ -1,5 +1,5 @@
 module ContractHelper
-    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/nom-manager-celo-three"
+    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/celo-add-monkey-nft"
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
@@ -701,6 +701,7 @@ module ContractHelper
                     logger.info("---------start new-ranking -------")
                     contract_address = @contract.nftAddress
                     if contract_address != "0x046d19c5e5e8938d54fb02dcc396acf7f275490a" # nomdom
+                        || contract_address != "0x1f25f8df9e33033668d6f04dae0bde4854e9f1a5" # knoxnft
                         logger.info("---------fetchAllTraitValues -------")
                         fetchAllTraitValues(contract_address)
                         logger.info("---------makeRating -------")
