@@ -169,7 +169,10 @@ module ContractHelper
         @contractInfo.market_status =  contractInfosData.market_status
         @contractInfo.dna =  contractInfosData.dna
         @contractInfo.name =  contractInfosData.name
-        @contractInfo.description =  contractInfosData.description
+        if contractInfosData.contract_address == "0xc017019e7b1566900553987ac1d9b25d126da16c"
+        else
+            @contractInfo.description =  contractInfosData.description
+        end
         @contractInfo.attributeString =  contractInfosData.attributes
         @contractInfo.image =  contractInfosData.image
         @contractInfo.tag_attribute_count =  contractInfosData.tag_attribute_count
