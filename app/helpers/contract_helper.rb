@@ -1,5 +1,5 @@
 module ContractHelper
-    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/add-celoerectus"
+    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/cyber-update-chilchil-meta"
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
@@ -198,6 +198,40 @@ module ContractHelper
             makeThumbnail(@contractInfo, image_fetch)
         end
     end
+
+    # https://cybertime.mypinata.cloud/ipfs/QmZf4KzmjUku952irRoXUpPGJ5qp1NBvdEEQCFcy2rm3VS/5.jpg
+    def makeCBCNThumbImage
+        FileUtils.mkdir_p "#{Rails.root}/public/CBCN/"
+        FileUtils.mkdir_p "#{Rails.root}/public/CBCN/thumb"
+        FileUtils.mkdir_p "#{Rails.root}/public/CBCN/detail"
+
+        for index in [1,2,3,4,5,6,7,8,9,10,11,12,13] do
+            imageUrl = "https://cybertime.mypinata.cloud/ipfs/QmZf4KzmjUku952irRoXUpPGJ5qp1NBvdEEQCFcy2rm3VS/#{index}.jpg" 
+            imagePath_thumb = "#{Rails.root}/public/CBCN/thumb/#{index}.png"
+            if File.exist?(imagePath_thumb) == false
+                MiniMagick.configure do |config|
+                    config.timeout = 10
+                end
+                image = MiniMagick::Image.open(imageUrl)
+                image.resize "280x280"
+                image.format "png"
+                image.write(imagePath_thumb)
+                File.chmod(0777, imagePath_thumb)
+            end
+            imagePath_detail = "#{Rails.root}/public/CBCN/detail/#{index}.png"
+            if File.exist?(imagePath_detail) == false
+                MiniMagick.configure do |config|
+                    config.timeout = 10
+                end
+                image = MiniMagick::Image.open(imageUrl)
+                image.resize "500x500"
+                image.format "png"
+                image.write(imagePath_detail)
+                File.chmod(0777, imagePath_detail)
+            end
+        end
+    end
+
     # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
     # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
     def makeThumbnail(contract_info_obj, image_fetch = true)
