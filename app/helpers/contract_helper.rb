@@ -14,6 +14,12 @@ module ContractHelper
         logger.info("---------fetchAllContractDetail completed -------")
     end
 
+    def fetchImageForContract(contractInfo)
+        nftSybol = contractInfo.nft_symbol
+        contract_id = contractInfo.contract_id
+
+    end
+
     def fetchContractDetail(nftAddress)
         logger.info("---------fetchContractDetail #{nftAddress} -------")
         contract_data = fetchTheGraphContract(nftAddress)
@@ -50,7 +56,7 @@ module ContractHelper
             if errorLogs.present?
                 errorLogs.destroy
             end
-            makeThumbnail(contractInfo)
+            makeS3Images(contractInfo)
         end
     end
 
@@ -199,6 +205,78 @@ module ContractHelper
         end
     end
 
+
+    def makeS3Images(contract_info_obj)
+        nftSymbol = contract_info_obj.nft_symbol
+        contract_id = contract_info_obj.contract_id
+        imageUrl = contract_info_obj.image
+
+        puts "# makeThumbnail Start #{nftSymbol} #{contract_id}"
+        
+        Aws.config.update({
+        region: 'us-east-2',
+        credentials: Aws::Credentials.new("AKIAZPV4RETFNFILD6PX", "QHv6fqElWhYgn63gWrZWGNlb0wFFUfpR/meu4ykQ"),
+        })
+        s3 = Aws::S3::Resource.new(region: 'us-east-2')
+        bucket = 'cdn-cyberbox'
+
+        check_obj = s3.bucket(bucket).object("500/" + nftSymbol + "/" + name)
+        if check_obj.exists? == false
+            begin
+                if imageUrl.include? "ipfs://"
+                    imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
+                end
+                imageFormat = File.extname(URI.parse(imageUrl).path)
+                if imageFormat.include? "."
+                    imageFormat["."] = ""
+                end
+        
+                FileUtils.mkdir_p "#{Rails.root}/public/temp/500"
+                FileUtils.mkdir_p "#{Rails.root}/public/temp/250"
+        
+                targetFileName_500 = "#{Rails.root}/public/temp/500/#{contract_id}.cwebp"
+                targetFileName_280 = "#{Rails.root}/public/temp/250/#{contract_id}.cwebp"
+                if imageFormat == "gif"
+                    targetFileName_500 = "#{Rails.root}/public/temp/500/#{contract_id}.gif"
+                    targetFileName_280 = "#{Rails.root}/public/temp/250/#{contract_id}.gif"
+                end
+        
+                if File.exist?(targetFileName_500) == true
+                    File.delete(targetFileName_500)
+                end
+        
+                MiniMagick.configure do |config|
+                    config.timeout = 10
+                end
+                image = MiniMagick::Image.open(imageUrl)
+                image.resize "500x500"
+                image.format "cwebp"
+                image.write(targetFileName_500)
+                File.chmod(0777, targetFileName_500)
+                name = File.basename(targetFileName_500)
+                obj = s3.bucket(bucket).object("500/" + nftSymbol + "/" + name)
+                obj.upload_file(targetFileName_500, {acl: 'public-read'})
+                
+                if File.exist?(targetFileName_280) == true
+                    File.delete(targetFileName_280)
+                end
+                
+                image.resize "280x280"
+                image.write(targetFileName_280)
+                File.chmod(0777, targetFileName_280)
+        
+                name = File.basename(targetFileName_280)
+                obj = s3.bucket(bucket).object("280/" + nftSymbol + "/" + name)
+                obj.upload_file(targetFileName_280, {acl: 'public-read'})
+            rescue => e
+                puts "# makeThumbnail error"
+                @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
+                # sleep(30)
+            end
+        end
+        
+    end
+
     # https://cybertime.mypinata.cloud/ipfs/QmZf4KzmjUku952irRoXUpPGJ5qp1NBvdEEQCFcy2rm3VS/5.jpg
     def makeCBCNThumbImage
         FileUtils.mkdir_p "#{Rails.root}/public/CBCN/"
@@ -245,63 +323,7 @@ module ContractHelper
             end
             return
         end
-        if image_fetch == false
-            puts "# makeThumbnail error"
-                    @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
-            return
-        end
-        imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
-        if File.exist?(imagePath) == false
-            FileUtils.mkdir_p "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/"
-            if contract_info_obj.image.present?
-                begin
-                    puts "#{contract_info_obj.image}"
-                    imageUrl = contract_info_obj.image
-                    if imageUrl.include? "ipfs://"
-                        imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
-                    end
-
-                    imageFormat = File.extname(URI.parse(imageUrl).path)
-                    if imageFormat.include? "."
-                        imageFormat["."] = ""
-                    end
-
-                    if imageFormat == "gif"
-                        targetFileName = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.gif"
-                        if File.exist?(targetFileName) == true
-                            return
-                        end
-                    end
-
-                    MiniMagick.configure do |config|
-                        config.timeout = 10
-                    end
-                    logger.info("//////// start loading image ///////")
-                    logger.info(imageUrl)
-                    image = MiniMagick::Image.open(imageUrl)
-                    logger.info("//////// complete loading image ///////")
-                    
-                    imageDimension_width = image.dimensions[0]
-
-                    targetFileName = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.png"
-                    if imageFormat == "gif"
-                        targetFileName = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{contract_info_obj.contract_id}.gif"
-                        image.write(targetFileName)
-                    elsif imageDimension_width < 280
-                        image.write(targetFileName)
-                    else
-                        image.resize "280x280"
-                        image.format imageFormat
-                        image.write(targetFileName)
-                    end
-                    File.chmod(0777, targetFileName)
-                rescue => e
-                    puts "# makeThumbnail error"
-                    @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
-                    # sleep(30)
-                end
-            end
-        end
+        makeS3Images(contract_info_obj)
     end
 
     def fetchTheGraphContract(nftAddress)
