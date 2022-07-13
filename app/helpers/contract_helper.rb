@@ -207,7 +207,7 @@ module ContractHelper
 
 
     def makeS3Images(contract_info_obj)
-        nftSymbol = contract_info_obj.nft_symbol
+        nftSymbol = contract_info_obj.nftSymbol
         contract_id = contract_info_obj.contract_id
         imageUrl = contract_info_obj.image
 
