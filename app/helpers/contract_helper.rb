@@ -220,7 +220,7 @@ module ContractHelper
         s3 = Aws::S3::Resource.new(region: 'us-east-2')
         bucket = 'cdn-cyberbox'
 
-        check_obj = s3.bucket(bucket).object("280/" + nftSymbol + "/" + contract_id + ".cwebp")
+        check_obj = s3.bucket(bucket).object("280/#{nftSymbol}/#{contract_id}.cwebp")
         if check_obj.exists? == false
             begin
                 if imageUrl.include? "ipfs://"
