@@ -200,9 +200,9 @@ module ContractHelper
         @contractInfo.tag_element15= contractInfosData.tag_element15
         @contractInfo.save!
         
-        if @contractInfo.nftSymbol != "christmaspunk"
+        # if @contractInfo.nftSymbol != "christmaspunk"
             makeThumbnail(@contractInfo, image_fetch)
-        end
+        # end
     end
 
 
