@@ -1,5 +1,5 @@
 module ContractHelper
-    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/cyber-update-chilchil-meta"
+    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/cert-minter-v2"
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
@@ -63,6 +63,7 @@ module ContractHelper
     def fetchAllErrorImages
         allErrors = ErrorImageItem.all
         allErrors.each do |error_item|
+            # error_item.destroy()
             contract_name = error_item.contract_name
             fetchIPFSImage(contract_name)
         end
@@ -205,14 +206,54 @@ module ContractHelper
         # end
     end
 
+    def drawTextToNomImage(text, imageId)
+        imagePath = "#{Rails.root}/public/nomspace.png"
+        fontPath = "#{Rails.root}/public/Arial-Unicode-Bold.ttf"
+        outpath = "#{Rails.root}/public/temp/nom.png"
+        
+        font_size = 60
+        if text.length > 0
+            font_size = 60
+        elsif text.length >12
+            font_size = 55
+        elsif text.length > 24
+            font_size = 50
+        elsif text.length > 30
+            font_size = 40
+        else
+            font_size = 50
+        end
+        text_st_pos_x = 45
+        text_st_pos_y = 251
+        text_limit_width = 410
+        text_limit_height = 200
+
+        draw_text = getMultilineText(text, ".nom", fontPath, font_size, text_limit_width)
+
+        if checkStringHaveEmoji(draw_text) == true
+            text_st_pos_y = 220
+            outpath_img = "#{Rails.root}/public/temp/nom_text.png"
+            system("convert -pointsize #{font_size} -fill '#5452FC' -font '#{fontPath}' -background '#F2F3F5' pango:'#{draw_text}' #{outpath_img}")
+            backImg = Magick::ImageList.new(imagePath)
+            overlap_img = Magick::ImageList.new(outpath_img)
+            combined_image = backImg.composite(overlap_img,text_st_pos_x, text_st_pos_y, Magick::OverCompositeOp)
+            combined_image.format = "png"
+            combined_image.write(outpath)
+
+        else
+            img = Magick::ImageList.new(imagePath)
+            txt = Magick::Draw.new
+            img.annotate(txt, text_limit_width, text_limit_height , text_st_pos_x, text_st_pos_y,  draw_text) do 
+                txt.pointsize = font_size
+                txt.fill = "#5452FC"
+                txt.font = fontPath
+                txt.align = Magick::LeftAlign
+            end
+            img.write(outpath)
+        end
+    end
 
     def makeS3Images(contract_info_obj)
-        nftSymbol = contract_info_obj.nftSymbol
-        contract_id = contract_info_obj.contract_id
-        imageUrl = contract_info_obj.image
-
-        puts "# makeThumbnail Start #{nftSymbol} #{contract_id}"
-        
         Aws.config.update({
         region: 'us-east-2',
         credentials: Aws::Credentials.new("AKIAZPV4RETFNFILD6PX", "QHv6fqElWhYgn63gWrZWGNlb0wFFUfpR/meu4ykQ"),
@@ -220,58 +261,90 @@ module ContractHelper
         s3 = Aws::S3::Resource.new(region: 'us-east-2')
         bucket = 'cdn-cyberbox'
 
-        check_obj = s3.bucket(bucket).object("280/#{nftSymbol}/#{contract_id}.cwebp")
-        if check_obj.exists? == false
-            begin
-                if imageUrl.include? "ipfs://"
-                    imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
-                end
-                imageFormat = File.extname(URI.parse(imageUrl).path)
-                if imageFormat.include? "."
-                    imageFormat["."] = ""
-                end
-        
-                FileUtils.mkdir_p "#{Rails.root}/public/temp/500"
-                FileUtils.mkdir_p "#{Rails.root}/public/temp/250"
-        
-                targetFileName_500 = "#{Rails.root}/public/temp/500/#{contract_id}.cwebp"
-                targetFileName_280 = "#{Rails.root}/public/temp/250/#{contract_id}.cwebp"
-                if imageFormat == "gif"
-                    targetFileName_500 = "#{Rails.root}/public/temp/500/#{contract_id}.gif"
-                    targetFileName_280 = "#{Rails.root}/public/temp/250/#{contract_id}.gif"
-                end
-        
-                if File.exist?(targetFileName_500) == true
-                    File.delete(targetFileName_500)
-                end
-        
+        nftSymbol = contract_info_obj.nftSymbol
+        contract_id = contract_info_obj.contract_id
+        imageUrl = contract_info_obj.image
+
+        puts "# makeThumbnail Start #{nftSymbol} #{contract_id}"
+
+        if contract_info_obj.nftSymbol == "nomdom"
+            imageName = contract_info_obj.image
+            imagePath = "#{Rails.root}/public/temp/nom.png"
+            if File.exist?(imagePath) == false
+                File.delete(imagePath)
+                drawTextToNomImage(contract_info_obj.name, imageName)
+                outpath = "#{Rails.root}/public/temp/nom.png"
+
+                obj = s3.bucket(bucket).object("500/#{nftSymbol}/#{imageName}.cwebp")
+                obj.upload_file(outpath, {acl: 'public-read'})
+
+                outpath_280 = "#{Rails.root}/public/temp/nom_280.png"
                 MiniMagick.configure do |config|
-                    config.timeout = 10
+                    config.timeout = 2
                 end
-                image = MiniMagick::Image.open(imageUrl)
-                image.resize "500x500"
-                image.format "cwebp"
-                image.write(targetFileName_500)
-                File.chmod(0777, targetFileName_500)
-                name = File.basename(targetFileName_500)
-                obj = s3.bucket(bucket).object("500/" + nftSymbol + "/" + name)
-                obj.upload_file(targetFileName_500, {acl: 'public-read'})
-                
-                if File.exist?(targetFileName_280) == true
-                    File.delete(targetFileName_280)
-                end
-                
+                image = MiniMagick::Image.open(outpath)
                 image.resize "280x280"
-                image.write(targetFileName_280)
-                File.chmod(0777, targetFileName_280)
-        
-                name = File.basename(targetFileName_280)
-                obj = s3.bucket(bucket).object("280/" + nftSymbol + "/" + name)
-                obj.upload_file(targetFileName_280, {acl: 'public-read'})
-            rescue => e
-                puts "# makeThumbnail error"
-                @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
-                # sleep(30)
+                image.format "cwebp"
+                image.write(outpath_280)
+                File.chmod(0777, outpath_280)
+
+                obj = s3.bucket(bucket).object("280/#{nftSymbol}/#{imageName}.cwebp")
+                obj.upload_file(outpath_280, {acl: 'public-read'})
+            end
+        else
+            check_obj = s3.bucket(bucket).object("280/#{nftSymbol}/#{contract_id}.cwebp")
+            if check_obj.exists? == false
+                begin
+                    if imageUrl.include? "ipfs://"
+                        imageUrl["ipfs://"]= "https://ipfs.io/ipfs/"
+                    end
+                    imageFormat = File.extname(URI.parse(imageUrl).path)
+                    if imageFormat.include? "."
+                        imageFormat["."] = ""
+                    end
+            
+                    FileUtils.mkdir_p "#{Rails.root}/public/temp/500"
+                    FileUtils.mkdir_p "#{Rails.root}/public/temp/250"
+            
+                    targetFileName_500 = "#{Rails.root}/public/temp/500/#{contract_id}.cwebp"
+                    targetFileName_280 = "#{Rails.root}/public/temp/250/#{contract_id}.cwebp"
+                    if imageFormat == "gif"
+                        targetFileName_500 = "#{Rails.root}/public/temp/500/#{contract_id}.gif"
+                        targetFileName_280 = "#{Rails.root}/public/temp/250/#{contract_id}.gif"
+                    end
+            
+                    if File.exist?(targetFileName_500) == true
+                        File.delete(targetFileName_500)
+                    end
+            
+                    MiniMagick.configure do |config|
+                        config.timeout = 2
+                    end
+                    image = MiniMagick::Image.open(imageUrl)
+                    image.resize "500x500"
+                    image.format "cwebp"
+                    image.write(targetFileName_500)
+                    File.chmod(0777, targetFileName_500)
+                    name = File.basename(targetFileName_500)
+                    obj = s3.bucket(bucket).object("500/" + nftSymbol + "/" + name)
+                    obj.upload_file(targetFileName_500, {acl: 'public-read'})
+                    
+                    if File.exist?(targetFileName_280) == true
+                        File.delete(targetFileName_280)
+                    end
+                    
+                    image.resize "280x280"
+                    image.write(targetFileName_280)
+                    File.chmod(0777, targetFileName_280)
+            
+                    name = File.basename(targetFileName_280)
+                    obj = s3.bucket(bucket).object("280/" + nftSymbol + "/" + name)
+                    obj.upload_file(targetFileName_280, {acl: 'public-read'})
+                rescue => e
+                    puts "# makeThumbnail error"
+                    @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
+                    # sleep(30)
+                end
             end
         end
         
@@ -288,7 +361,7 @@ module ContractHelper
             imagePath_thumb = "#{Rails.root}/public/CBCN/thumb/#{index}.png"
             if File.exist?(imagePath_thumb) == false
                 MiniMagick.configure do |config|
-                    config.timeout = 10
+                    config.timeout = 2
                 end
                 image = MiniMagick::Image.open(imageUrl)
                 image.resize "280x280"
@@ -299,7 +372,7 @@ module ContractHelper
             imagePath_detail = "#{Rails.root}/public/CBCN/detail/#{index}.png"
             if File.exist?(imagePath_detail) == false
                 MiniMagick.configure do |config|
-                    config.timeout = 10
+                    config.timeout = 2
                 end
                 image = MiniMagick::Image.open(imageUrl)
                 image.resize "500x500"
@@ -637,53 +710,6 @@ module ContractHelper
             results.each do |row|
                 puts row
             end
-        end
-    end
-
-    def drawTextToNomImage(text, imageId)
-        imagePath = "#{Rails.root}/public/nomspace.png"
-        fontPath = "#{Rails.root}/public/Arial-Unicode-Bold.ttf"
-        outpath = "#{Rails.root}/public/nomdom/#{imageId}.png"
-        
-        font_size = 60
-        if text.length > 0
-            font_size = 60
-        elsif text.length >12
-            font_size = 55
-        elsif text.length > 24
-            font_size = 50
-        elsif text.length > 30
-            font_size = 40
-        else
-            font_size = 50
-        end
-        text_st_pos_x = 45
-        text_st_pos_y = 251
-        text_limit_width = 410
-        text_limit_height = 200
-
-        draw_text = getMultilineText(text, ".nom", fontPath, font_size, text_limit_width)
-
-        if checkStringHaveEmoji(draw_text) == true
-            text_st_pos_y = 220
-            outpath_img = "#{Rails.root}/public/nomdom/sub_#{imageId}.png"
-            system("convert -pointsize #{font_size} -fill '#5452FC' -font '#{fontPath}' -background '#F2F3F5' pango:'#{draw_text}' #{outpath_img}")
-            backImg = Magick::ImageList.new(imagePath)
-            overlap_img = Magick::ImageList.new(outpath_img)
-            combined_image = backImg.composite(overlap_img,text_st_pos_x, text_st_pos_y, Magick::OverCompositeOp)
-            combined_image.format = "png"
-            combined_image.write(outpath)
-
-        else
-            img = Magick::ImageList.new(imagePath)
-            txt = Magick::Draw.new
-            img.annotate(txt, text_limit_width, text_limit_height , text_st_pos_x, text_st_pos_y,  draw_text) do 
-                txt.pointsize = font_size
-                txt.fill = "#5452FC"
-                txt.font = fontPath
-                txt.align = Magick::LeftAlign
-            end
-            img.write(outpath)
         end
     end
 
