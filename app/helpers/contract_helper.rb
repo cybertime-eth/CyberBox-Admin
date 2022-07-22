@@ -271,7 +271,7 @@ module ContractHelper
             imageName = contract_info_obj.image
             imagePath = "#{Rails.root}/public/temp/nom.png"
             if File.exist?(imagePath) == false
-                File.delete(imagePath)
+                # File.delete(imagePath)
                 drawTextToNomImage(contract_info_obj.name, imageName)
                 outpath = "#{Rails.root}/public/temp/nom.png"
 
