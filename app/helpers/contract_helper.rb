@@ -270,6 +270,9 @@ module ContractHelper
         if contract_info_obj.nftSymbol == "nomdom"
             imageName = contract_info_obj.image
             imagePath = "#{Rails.root}/public/temp/nom.png"
+            if File.exist?(imagePath) == true
+                File.delete(imagePath)
+            end
             if File.exist?(imagePath) == false
                 # File.delete(imagePath)
                 drawTextToNomImage(contract_info_obj.name, imageName)
