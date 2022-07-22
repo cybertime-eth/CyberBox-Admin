@@ -269,8 +269,6 @@ module ContractHelper
 
         if contract_info_obj.nftSymbol == "nomdom"
 
-            puts "# nomdom Start #{contract_info_obj.mint_key}"
-
             imageName = contract_info_obj.image
             imagePath = "#{Rails.root}/public/temp/nom.png"
 
