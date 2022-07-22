@@ -30,7 +30,7 @@ module ContractHelper
         per_page_count = 100
         if nftAddress == "0x046d19c5e5e8938d54fb02dcc396acf7f275490a"
             nftSymbol = "nomdom"
-            start_index = 12358
+            start_index = 43469
         end
         
         while start_index < all_mint_count
