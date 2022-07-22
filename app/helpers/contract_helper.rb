@@ -386,16 +386,16 @@ module ContractHelper
     # //"ipfs://QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/245.png"
     # https://ipfs.io/ipfs/QmNcjPTYFFsDosWAXFzefUX9y7hsVjXDPRr2hw5MhPdGoo/123.png
     def makeThumbnail(contract_info_obj, image_fetch = true)
-        if contract_info_obj.nftSymbol == "nomdom"
-            puts "#{contract_info_obj.contract_id}"
-            imageName = contract_info_obj.image
-            imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{imageName}.png"
-            if File.exist?(imagePath) == false
-                FileUtils.mkdir_p "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/"
-                drawTextToNomImage(contract_info_obj.name, imageName)
-            end
-            return
-        end
+        # if contract_info_obj.nftSymbol == "nomdom"
+        #     puts "#{contract_info_obj.contract_id}"
+        #     imageName = contract_info_obj.image
+        #     imagePath = "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/#{imageName}.png"
+        #     if File.exist?(imagePath) == false
+        #         FileUtils.mkdir_p "#{Rails.root}/public/#{contract_info_obj.nftSymbol}/"
+        #         drawTextToNomImage(contract_info_obj.name, imageName)
+        #     end
+        #     return
+        # end
         makeS3Images(contract_info_obj)
     end
 
