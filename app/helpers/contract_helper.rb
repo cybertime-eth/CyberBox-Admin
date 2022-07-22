@@ -796,6 +796,7 @@ module ContractHelper
                     contract_address = @contract.nftAddress
                     if contract_address != "0x046d19c5e5e8938d54fb02dcc396acf7f275490a" # nomdom
                     elsif contract_address != "0x1f25f8df9e33033668d6f04dae0bde4854e9f1a5" # knoxnft
+                    elsif contract_address != "5167545246389352752" # CyberBoxCertNFT
                     else
                         logger.info("---------fetchAllTraitValues -------")
                         fetchAllTraitValues(contract_address)
