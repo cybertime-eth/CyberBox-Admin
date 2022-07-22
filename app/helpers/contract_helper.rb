@@ -270,6 +270,12 @@ module ContractHelper
         if contract_info_obj.nftSymbol == "nomdom"
             imageName = contract_info_obj.image
             imagePath = "#{Rails.root}/public/temp/nom.png"
+
+            check_obj = s3.bucket(bucket).object("280/#{nftSymbol}/#{imageName}.cwebp")
+            if check_obj.exists? == true
+                return
+            end
+
             if File.exist?(imagePath) == true
                 File.delete(imagePath)
             end
