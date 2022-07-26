@@ -266,9 +266,6 @@ module ContractHelper
         nftSymbol = contract_info_obj.nftSymbol
         contract_id = contract_info_obj.contract_id
         imageUrl = contract_info_obj.image
-        if contract_info_obj.nftSymbol == "nomstronaut"
-            imageUrl = "https://cloudflare-ipfs.com/ipfs/bafybeifigjz7vn6czinttkewenz7qbsitoa4zormghjanpitpdlpw4mmki/output/#{contract_id}.png"
-        end
 
         puts "# makeThumbnail Start #{nftSymbol} #{contract_id}"
 
