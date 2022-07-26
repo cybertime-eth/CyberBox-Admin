@@ -1,5 +1,5 @@
 module ContractHelper
-    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/cert-minter-v2"
+    GRAPHQL_ENDPOINT = "https://api.thegraph.com/subgraphs/name/itdev-1210/change-todaz-refer-url-two"
     GRAPHQL_TOKEN = "3f88570f315c4e18886a286382acfa72"
     
     def fetchAllContractDetail
