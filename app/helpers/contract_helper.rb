@@ -305,7 +305,7 @@ module ContractHelper
             end
         else
             check_obj = s3.bucket(bucket).object("280/#{nftSymbol}/#{contract_id}.cwebp")
-            if nftSymbol == christmaspunk
+            if nftSymbol == "christmaspunk"
                 check_obj = s3.bucket(bucket).object("280/#{nftSymbol}/#{contract_id}.gif")
             end
             if check_obj.exists? == false
