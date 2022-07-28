@@ -333,7 +333,7 @@ module ContractHelper
                     end
             
                     MiniMagick.configure do |config|
-                        config.timeout = 2
+                        config.timeout = 20
                     end
                     image = MiniMagick::Image.open(imageUrl)
                     image.resize "500x500"
