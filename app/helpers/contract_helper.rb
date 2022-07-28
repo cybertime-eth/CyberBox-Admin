@@ -332,10 +332,6 @@ module ContractHelper
                         File.delete(targetFileName_500)
                     end
 
-                    if nftSymbol == "nomstronaut"
-                        sleep(8)
-                    end
-            
                     MiniMagick.configure do |config|
                         config.timeout = 50
                     end
