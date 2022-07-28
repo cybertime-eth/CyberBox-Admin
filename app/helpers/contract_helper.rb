@@ -359,7 +359,7 @@ module ContractHelper
                     puts "# makeThumbnail error"
                     @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
                     if nftSymbol == "nomstronaut"
-                        sleep(8)
+                        sleep(15)
                     end
                 end
             end
