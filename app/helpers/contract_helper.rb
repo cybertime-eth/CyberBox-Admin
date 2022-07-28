@@ -331,6 +331,10 @@ module ContractHelper
                     if File.exist?(targetFileName_500) == true
                         File.delete(targetFileName_500)
                     end
+
+                    if nftSymbol == "nomstronaut"
+                        sleep(0.2)
+                    end
             
                     MiniMagick.configure do |config|
                         config.timeout = 20
