@@ -321,11 +321,11 @@ module ContractHelper
                     FileUtils.mkdir_p "#{Rails.root}/public/temp/500#{nftSymbol}"
                     FileUtils.mkdir_p "#{Rails.root}/public/temp/250#{nftSymbol}"
             
-                    targetFileName_500 = "#{Rails.root}/public/temp/500#{nftSymbol}/#{contract_id}.cwebp"
-                    targetFileName_280 = "#{Rails.root}/public/temp/250#{nftSymbol}/#{contract_id}.cwebp"
+                    targetFileName_500 = "#{Rails.root}/public/temp/500#{nftSymbol}/image.cwebp"
+                    targetFileName_280 = "#{Rails.root}/public/temp/250#{nftSymbol}/image.cwebp"
                     if imageFormat == "gif"
-                        targetFileName_500 = "#{Rails.root}/public/temp/500#{nftSymbol}/#{contract_id}.gif"
-                        targetFileName_280 = "#{Rails.root}/public/temp/250#{nftSymbol}/#{contract_id}.gif"
+                        targetFileName_500 = "#{Rails.root}/public/temp/500#{nftSymbol}/image}.gif"
+                        targetFileName_280 = "#{Rails.root}/public/temp/250#{nftSymbol}/image.gif"
                     end
             
                     if File.exist?(targetFileName_500) == true
