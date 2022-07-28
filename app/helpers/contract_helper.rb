@@ -333,7 +333,7 @@ module ContractHelper
                     end
 
                     if nftSymbol == "nomstronaut"
-                        sleep(0.2)
+                        sleep(1)
                     end
             
                     MiniMagick.configure do |config|
