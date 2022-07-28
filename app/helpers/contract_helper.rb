@@ -331,7 +331,7 @@ module ContractHelper
                     if File.exist?(targetFileName_500) == true
                         File.delete(targetFileName_500)
                     end
-
+            
                     MiniMagick.configure do |config|
                         config.timeout = 50
                     end
@@ -358,7 +358,9 @@ module ContractHelper
                 rescue => e
                     puts "# makeThumbnail error"
                     @errorItem = ErrorImageItem.create(contract_info_id: contract_info_obj.id, contract_name: contract_info_obj.contract_info_id)
-                    # sleep(30)
+                    if nftSymbol == "nomstronaut"
+                        sleep(8)
+                    end
                 end
             end
         end
